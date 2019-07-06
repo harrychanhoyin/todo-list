@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { getTodoList } from '../redux/actions';
+import { getTodoList, getUser } from '../redux/actions';
 
 const ListTable = styled.div`
 `;
@@ -88,6 +88,18 @@ const TableData = styled.td`
 class Todo extends React.Component{
 	componentDidMount() {
 		this.props.getTodoList();
+		this.props.getUser();
+	}
+
+	renderUser(userId) {
+	  var users = this.props.todo.user.map(user => {
+			if (user.id === userId) {
+				return user.name;
+			} else {
+				return null;
+			}
+		})
+		return users;
 	}
 
 	renderList() {
@@ -95,13 +107,15 @@ class Todo extends React.Component{
 			return (
 				<TableBodyRow key={item.id}>
 					<TableData>{item.id}</TableData>
-					<TableData>{item.title}</TableData>
+					<TableData>
+						{item.title} - {this.props.todo.user === undefined ? null : this.renderUser(item.userId)}
+					</TableData>
 					<TableData>{item.completed ? '✓' : null}</TableData>
 				</TableBodyRow>
 			);
 		})
 		return list;
-	}
+	};
 
 	render() {
 		console.log(this.props)
@@ -132,10 +146,12 @@ class Todo extends React.Component{
 }
 
 const mapStateToProps = (state) => {
-	return { todo: state.todo }
+	return { 
+		todo: state.todo
+	}
 }
 
 export default connect(
 	mapStateToProps,
-	{ getTodoList }
+	{ getTodoList, getUser }
 )(Todo);
