@@ -5,3 +5,9 @@ export const getTodoList = () => async dispatch => {
 	
 	dispatch({ type: 'FETCH_TODO_LIST', payload: response.data });
 }
+
+export const getUser = () => async dispatch => {
+	const response = await todo.get(`users`);
+	
+	dispatch({ type: 'FETCH_USER', payload: response.data });
+}
