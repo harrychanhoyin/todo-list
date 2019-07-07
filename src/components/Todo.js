@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Pagination } from 'antd';
 
-import { getTodoList, getUser } from '../redux/actions';
+import { getTodoList, getUser, changePage } from '../redux/actions';
 
 const ListTable = styled.div`
 `;
@@ -103,6 +104,7 @@ class Todo extends React.Component{
 	}
 
 	renderList() {
+		var pageSize = this.props.todo.page === 1 ? 0 : (this.props.todo.page - 1) * 10;
 		const list = (this.props.todo.list).map((item) => {
 			return (
 				<TableBodyRow key={item.id}>
@@ -114,7 +116,7 @@ class Todo extends React.Component{
 				</TableBodyRow>
 			);
 		})
-		return list;
+		return list.splice(pageSize, 10);
 	};
 
 	render() {
@@ -128,18 +130,24 @@ class Todo extends React.Component{
 						<ListButton>Add</ListButton>
 					</InputWrapper>
 				</ListHeader>
-				<TableWrapper>
-					<thead>
-						<TableHeadRow>
-							<TableHead>ID</TableHead>
-							<TableHead>Title</TableHead>
-							<TableHead>Completed</TableHead>
-						</TableHeadRow>
-					</thead>
-					<tbody>
-						{this.renderList()}
-					</tbody>
-			  </TableWrapper>
+					<TableWrapper>
+						<thead>
+							<TableHeadRow>
+								<TableHead>ID</TableHead>
+								<TableHead>Title</TableHead>
+								<TableHead>Completed</TableHead>
+							</TableHeadRow>
+						</thead>
+						<tbody>
+							{this.renderList()}
+						</tbody>
+					</TableWrapper>
+					<Pagination 
+						current={this.props.todo.page}
+						onChange={(page) => this.props.changePage(page)}
+						pageSize={10}
+						total={50}
+					/>
 			</ListTable>
 		);
 	}
@@ -153,5 +161,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
 	mapStateToProps,
-	{ getTodoList, getUser }
+	{ getTodoList, getUser, changePage }
 )(Todo);
