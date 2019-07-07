@@ -11,3 +11,10 @@ export const getUser = () => async dispatch => {
 	
 	dispatch({ type: 'FETCH_USER', payload: response.data });
 }
+
+export const changePage = (page) => {
+	return {
+		type: 'CHANGE_PAGE',
+		payload: page
+	};
+}
